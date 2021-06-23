@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpringChallenge", "SpringChallenge\SpringChallenge.csproj", "{3CBA7EA4-E59F-4EFA-B2A6-FF0124522D85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{8A891E1E-75E9-4FE8-9237-AB0015136722}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CBA7EA4-E59F-4EFA-B2A6-FF0124522D85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CBA7EA4-E59F-4EFA-B2A6-FF0124522D85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CBA7EA4-E59F-4EFA-B2A6-FF0124522D85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBA7EA4-E59F-4EFA-B2A6-FF0124522D85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A891E1E-75E9-4FE8-9237-AB0015136722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A891E1E-75E9-4FE8-9237-AB0015136722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A891E1E-75E9-4FE8-9237-AB0015136722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A891E1E-75E9-4FE8-9237-AB0015136722}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5630BE2B-C9D2-41B8-ABFC-1CFFA619B3B9}
+	EndGlobalSection
+EndGlobal

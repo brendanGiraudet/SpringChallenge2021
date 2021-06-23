@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Source/springChallenge/SpringChallenge/.vs/SpringChallenge/v16
+/Source/springChallenge/SpringChallenge/SpringChallenge/obj
+/Source/springChallenge/SpringChallenge/TestProject/obj
+/Source/springChallenge/SpringChallenge/SpringChallenge/bin/Debug/net5.0
+/Source/springChallenge/SpringChallenge/TestProject/bin/Debug/net5.0

@@ -43,10 +43,19 @@ class Player
             }
 
             // GROW cellIdx | SEED sourceIdx targetIdx | COMPLETE cellIdx | WAIT <message>
-            var tree = trees.FirstOrDefault(t => t.IsMine);
+            var mineTrees = trees.Where(t => t.IsMine && !t.IsDormant);
+            var tallerTree = mineTrees.FirstOrDefault(t => t.Size == 3 && sun > 3);
+            var middleSizeTree = mineTrees.FirstOrDefault(t => t.Size == 2 && sun >= 7+trees.Count(t=> t.Size == 3 && t.IsMine));
+            var smallerTree = mineTrees.FirstOrDefault(t => t.Size == 1 && sun >= 3+trees.Count(t=> t.Size == 2 && t.IsMine));
+            var emptyCells = GetEmptyCells(cells, trees);
+            var chosenEmptyCell = emptyCells.FirstOrDefault();
 
-            if(tree != null)
-                Console.WriteLine($"COMPLETE {tree.Cell.Index}");
+            if (tallerTree != null)
+                Console.WriteLine($"COMPLETE {tallerTree.Cell.Index}");
+            else if (middleSizeTree != null)
+                Console.WriteLine($"GROW {middleSizeTree.Cell.Index}");
+            else if (smallerTree != null)
+                Console.WriteLine($"GROW {smallerTree.Cell.Index}");
             else
                 Console.WriteLine("WAIT");
         }
@@ -74,6 +83,12 @@ class Player
             }
             return cells;
         }
+    }
+
+    private static List<Cell> GetEmptyCells(List<Cell> cells, List<Tree> trees)
+    {
+        var treeCells = trees.Select(t => t.Cell);
+        return cells.Except(treeCells).ToList();
     }
 
     private static List<Tree> GetTrees(List<Cell> cells)

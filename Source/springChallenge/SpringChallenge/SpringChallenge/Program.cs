@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 /**
  * Auto-generated code below aims at helping you parse
@@ -44,20 +41,43 @@ class Player
 
             // GROW cellIdx | SEED sourceIdx targetIdx | COMPLETE cellIdx | WAIT <message>
             var mineTrees = trees.Where(t => t.IsMine && !t.IsDormant);
-            var tallerTree = mineTrees.FirstOrDefault(t => t.Size == 3 && sun > 3);
-            var middleSizeTree = mineTrees.FirstOrDefault(t => t.Size == 2 && sun >= 7+trees.Count(t=> t.Size == 3 && t.IsMine));
-            var smallerTree = mineTrees.FirstOrDefault(t => t.Size == 1 && sun >= 3+trees.Count(t=> t.Size == 2 && t.IsMine));
-            var emptyCells = GetEmptyCells(cells, trees);
-            var chosenEmptyCell = emptyCells.FirstOrDefault();
 
+            var (seededCell, treeSeederCell) = GetCellsToSeed(cells, mineTrees.Where(t => t.Size > 0), trees);
+            if (seededCell != null && treeSeederCell != null && sun > mineTrees.Count(t => t.Size == 0))
+            {
+                Console.WriteLine($"SEED {treeSeederCell.Index} {seededCell.Index}");
+                continue;
+            }
+
+            var tallerTree = mineTrees.FirstOrDefault(t => t.Size == 3 && sun > 3);
             if (tallerTree != null)
+            {
                 Console.WriteLine($"COMPLETE {tallerTree.Cell.Index}");
-            else if (middleSizeTree != null)
+                continue;
+            }
+
+            var middleSizeTree = mineTrees.FirstOrDefault(t => t.Size == 2 && sun >= 7 + trees.Count(t => t.Size == 3 && t.IsMine));
+            if (middleSizeTree != null)
+            {
                 Console.WriteLine($"GROW {middleSizeTree.Cell.Index}");
-            else if (smallerTree != null)
+                continue;
+            }
+
+            var smallerTree = mineTrees.FirstOrDefault(t => t.Size == 1 && sun >= 3 + trees.Count(t => t.Size == 2 && t.IsMine));
+            if (smallerTree != null)
+            {
                 Console.WriteLine($"GROW {smallerTree.Cell.Index}");
-            else
-                Console.WriteLine("WAIT");
+                continue;
+            }
+
+            var seed = mineTrees.FirstOrDefault(t => t.Size == 0 && sun >= 1 + trees.Count(t => t.Size == 1 && t.IsMine));
+            if (seed != null)
+            {
+                Console.WriteLine($"GROW {seed.Cell.Index}");
+                continue;
+            }
+
+            Console.WriteLine("WAIT");
         }
 
         static List<Cell> GetCells()
@@ -83,6 +103,33 @@ class Player
             }
             return cells;
         }
+    }
+
+    private static (Cell seededCell, Cell SeederTreeCell) GetCellsToSeed(List<Cell> cells, IEnumerable<Tree> mineTrees, IEnumerable<Tree> trees)
+    {
+        foreach (var tree in mineTrees)
+        {
+            var neighbouringCell = GetNeighbourinCellToSeed(cells, tree.Cell, trees);
+            if (neighbouringCell != null) return (neighbouringCell, tree.Cell);
+        }
+        return (null, null);
+    }
+
+    private static Cell GetNeighbourinCellToSeed(List<Cell> cells, Cell treeCell, IEnumerable<Tree> trees)
+    {
+        if (treeCell == null) return null;
+
+        return cells.Find(c =>
+        (
+            c.Index.Equals(treeCell.NeighbouringCell0)
+            || c.Index.Equals(treeCell.NeighbouringCell1)
+            || c.Index.Equals(treeCell.NeighbouringCell2)
+            || c.Index.Equals(treeCell.NeighbouringCell3)
+            || c.Index.Equals(treeCell.NeighbouringCell4)
+            || c.Index.Equals(treeCell.NeighbouringCell5)
+        )
+        && c.Richness != 0
+        && !trees.Any(t => t.Cell.Index.Equals(c.Index)));
     }
 
     private static List<Cell> GetEmptyCells(List<Cell> cells, List<Tree> trees)

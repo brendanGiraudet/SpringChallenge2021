@@ -42,10 +42,24 @@ class Player
             // GROW cellIdx | SEED sourceIdx targetIdx | COMPLETE cellIdx | WAIT <message>
             var mineTrees = trees.Where(t => t.IsMine && !t.IsDormant);
 
-            var (seededCell, treeSeederCell) = GetCellsToSeed(cells, mineTrees.Where(t => t.Size > 0), trees);
-            if (seededCell != null && treeSeederCell != null && sun > mineTrees.Count(t => t.Size == 0))
+            var seed = mineTrees.FirstOrDefault(t => t.Size == 0 && sun >= 1 + trees.Count(t => t.Size == 1 && t.IsMine));
+            if (seed != null && NeedTree(1, trees.Where(t=>t.IsMine)))
             {
-                Console.WriteLine($"SEED {treeSeederCell.Index} {seededCell.Index}");
+                Console.WriteLine($"GROW {seed.Cell.Index}");
+                continue;
+            }
+
+            var smallerTree = mineTrees.FirstOrDefault(t => t.Size == 1 && sun >= 3 + trees.Count(t => t.Size == 2 && t.IsMine));
+            if (smallerTree != null && NeedTree(2, trees.Where(t => t.IsMine)))
+            {
+                Console.WriteLine($"GROW {smallerTree.Cell.Index}");
+                continue;
+            }
+
+            var middleSizeTree = mineTrees.FirstOrDefault(t => t.Size == 2 && sun >= 7 + trees.Count(t => t.Size == 3 && t.IsMine));
+            if (middleSizeTree != null && NeedTree(3, trees.Where(t => t.IsMine)))
+            {
+                Console.WriteLine($"GROW {middleSizeTree.Cell.Index}");
                 continue;
             }
 
@@ -56,28 +70,18 @@ class Player
                 continue;
             }
 
-            var middleSizeTree = mineTrees.FirstOrDefault(t => t.Size == 2 && sun >= 7 + trees.Count(t => t.Size == 3 && t.IsMine));
-            if (middleSizeTree != null)
+            var (seededCell, treeSeederCell) = GetCellsToSeed(cells, mineTrees.Where(t => t.Size > 0), trees);
+            if (seededCell != null && treeSeederCell != null && sun > mineTrees.Count(t => t.Size == 0) && NeedTree(1, trees.Where(t => t.IsMine)))
             {
-                Console.WriteLine($"GROW {middleSizeTree.Cell.Index}");
-                continue;
-            }
-
-            var smallerTree = mineTrees.FirstOrDefault(t => t.Size == 1 && sun >= 3 + trees.Count(t => t.Size == 2 && t.IsMine));
-            if (smallerTree != null)
-            {
-                Console.WriteLine($"GROW {smallerTree.Cell.Index}");
-                continue;
-            }
-
-            var seed = mineTrees.FirstOrDefault(t => t.Size == 0 && sun >= 1 + trees.Count(t => t.Size == 1 && t.IsMine));
-            if (seed != null)
-            {
-                Console.WriteLine($"GROW {seed.Cell.Index}");
+                Console.WriteLine($"SEED {treeSeederCell.Index} {seededCell.Index}");
                 continue;
             }
 
             Console.WriteLine("WAIT");
+        }
+        static bool NeedTree(int size, IEnumerable<Tree> trees)
+        {
+            return trees.Count(t => t.Size == size) < 3;
         }
 
         static List<Cell> GetCells()
